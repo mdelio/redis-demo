@@ -52,5 +52,5 @@ run "" # Wait for Input
 desc "Create a policy that blocks the EVIL Frontend from reaching redis"
 run "cat $(relative redis-policy.yaml); kubectl apply -f $(relative redis-policy.yaml)"
 
-desc "Now let's check out our two services again"
+desc "Now let's check on our two services again"
 run "" # Wait for Input
