@@ -27,12 +27,12 @@ type UserList []string
 func getUserList(client *redis.Client) (UserList, error) {
 	numUsers, err := client.LLen(kUsers).Result()
 	if err != nil {
-		return UserList{}, fmt.Errorf("failed to get number of users: %v", err)
+		return UserList{}, err
 	}
 
 	userNames, err := client.LRange(kUsers, 0, numUsers).Result()
 	if err != nil {
-		return UserList{}, fmt.Errorf("failed to get user list: %v", err)
+		return UserList{}, err
 	}
 	return UserList(userNames), nil
 }
@@ -40,7 +40,7 @@ func getUserList(client *redis.Client) (UserList, error) {
 func getUserInfo(client *redis.Client, username string) (UserInfo, error) {
 	info, err := client.HMGet(userHash(username), kUserInfoKeyName, kUserInfoKeyPasswd).Result()
 	if err != nil {
-		return UserInfo{}, fmt.Errorf("failed to get user info: %v", err)
+		return UserInfo{}, err
 	}
 	return UserInfo{
 		Name:     info[0].(string),
