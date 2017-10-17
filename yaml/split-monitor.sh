@@ -15,9 +15,12 @@
 
 . $(dirname ${BASH_SOURCE})/util.sh
 
+TMPFILE=$(mktemp --tmpdir tmp.micro-demo.XXXXXX)
+
 while [ true ]; do
-	kubectl --ignore-not-found --namespace $1 get all > tmp_$1.out
+	kubectl --ignore-not-found --namespace ${1} get all > ${TMPFILE}
 	clear
-	cat tmp_$1.out
+	desc "${1} namespace"
+	cat ${TMPFILE}
 	sleep 1
 done

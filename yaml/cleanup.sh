@@ -14,3 +14,4 @@ done
 
 kubectl get namespaces
 tmux kill-session -t demo-session >/dev/null 2>&1
+rm -f /tmp/tmp.micro-demo.*

@@ -16,8 +16,8 @@
 . $(dirname ${BASH_SOURCE})/util.sh
 
 tmux new-session -s demo-session -d \
-	"$(dirname $BASH_SOURCE)/demo-control.sh" \; \
-	split-window -h "$(dirname $BASH_SOURCE)/demo-monitor.sh demo-prod" \; \
-	split-window -v "$(dirname $BASH_SOURCE)/demo-monitor.sh demo-dev" \; \
+	"$(dirname $BASH_SOURCE)/split-control.sh" \; \
+	split-window -h "$(dirname $BASH_SOURCE)/split-monitor.sh demo-prod" \; \
+	split-window -v "$(dirname $BASH_SOURCE)/split-monitor.sh demo-dev" \; \
 	select-pane -t 0 \; \
 	attach \;
