@@ -105,7 +105,6 @@ func newProductionServer(client *backend.Client, useEmoji bool) *productionServe
 func (p *productionServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	userNames, err := p.client.GetUserNames()
 	if err != nil {
-		err = fmt.Errorf("failed to get username list: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		log.Println(err)
 		return
@@ -150,7 +149,6 @@ func newDevelopmentServer(client *backend.Client, useEmoji bool) *developmentSer
 func (d *developmentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	userInfoMap, err := d.client.GetAllUserInfo()
 	if err != nil {
-		err = fmt.Errorf("failed to get user info: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		log.Println(err)
 		return
