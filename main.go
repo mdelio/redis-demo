@@ -51,6 +51,7 @@ tr:nth-child(even) {
 		<tr><td><font color="red">None!</font></td></tr>
 	{{end}}
 	</table>
+	{{fmtTime .Now}}
 </body></html>`
 
 	kUserInfoTempl = `
@@ -72,6 +73,7 @@ tr:nth-child(even) {
 		<font color="red">None!</font>
 	{{end}}
 	</table>
+	{{fmtTime .Now}}
 </body></html>`
 )
 
@@ -89,8 +91,14 @@ type productionServer struct {
 	useEmoji bool
 }
 
+func fmtTime(now time.Time) string {
+	return now.Format("2006-01-02 15:04:05")
+}
+
 func newProductionServer(client *backend.Client, useEmoji bool) *productionServer {
-	tmpl, err := template.New("list").Parse(kUserListTempl + kStyle)
+	tmpl, err := template.New("list").
+		Funcs(template.FuncMap{"fmtTime": fmtTime}).
+		Parse(kUserListTempl + kStyle)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -114,9 +122,11 @@ func (p *productionServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	data := struct {
 		UseEmoji bool
 		UserList []string
+		Now      time.Time
 	}{
 		UseEmoji: p.useEmoji,
 		UserList: userNames,
+		Now:      time.Now(),
 	}
 
 	if err := p.tmpl.Execute(w, data); err != nil {
@@ -134,7 +144,9 @@ type developmentServer struct {
 }
 
 func newDevelopmentServer(client *backend.Client, useEmoji bool) *developmentServer {
-	tmpl, err := template.New("list").Parse(kUserInfoTempl + kStyle)
+	tmpl, err := template.New("list").
+		Funcs(template.FuncMap{"fmtTime": fmtTime}).
+		Parse(kUserInfoTempl + kStyle)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -166,10 +178,12 @@ func (d *developmentServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		UseEmoji    bool
 		SortedNames []string
 		Info        map[string]backend.UserInfo
+		Now         time.Time
 	}{
 		UseEmoji:    d.useEmoji,
 		SortedNames: sortedNames,
 		Info:        userInfoMap,
+		Now:         time.Now(),
 	}
 
 	if err := d.tmpl.Execute(w, data); err != nil {
